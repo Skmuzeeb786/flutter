@@ -1,0 +1,74 @@
+Question 18: Create a clock. What will be your approach to solving this problem statement?
+
+Hint 1:- Use flutter inbuilt library
+
+Hint 2:- Use only a timer.
+
+Hint 3:- Clock runs only for 1 sec.
+Source code:
+import 'dart:async';
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: ClockScreen(),
+    );
+  }
+}
+
+class ClockScreen extends StatefulWidget {
+  @override
+  _ClockScreenState createState() => _ClockScreenState();
+}
+
+class _ClockScreenState extends State<ClockScreen> {
+  late Timer _timer;
+  String _currentTime = _getCurrentTime();
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize a timer that runs every second (1000 ms)
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        _currentTime = _getCurrentTime();
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel(); // Stop the timer when the widget is disposed
+    super.dispose();
+  }
+
+  // Function to get the current time in "HH:mm:ss" format
+  static String _getCurrentTime() {
+    final now = DateTime.now();
+    return "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}";
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Clock Example'),
+      ),
+      body: Center(
+        child: Text(
+          _currentTime,
+          style: TextStyle(
+            fontSize: 60,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+}
