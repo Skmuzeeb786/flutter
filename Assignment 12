@@ -1,0 +1,92 @@
+Question 17: Show the start and end date in the date picker. But the end date should be 29 days ago from the start date. What will be your approach to getting this problem statement?
+
+Hint 1:- Use the date picker library for selecting the start and end date.
+Hint 2:- Add the logic which is end data should be 29 days ago from the start date.
+Source code:
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: DatePickerScreen(),
+    );
+  }
+}
+
+class DatePickerScreen extends StatefulWidget {
+  @override
+  _DatePickerScreenState createState() => _DatePickerScreenState();
+}
+
+class _DatePickerScreenState extends State<DatePickerScreen> {
+  DateTime? startDate;
+  DateTime? endDate;
+
+  // Function to show the date picker and calculate end date
+  Future<void> _selectStartDate(BuildContext context) async {
+    // Show date picker for the start date
+    DateTime initialDate = DateTime.now();
+    DateTime firstDate = DateTime(2000); // Earliest possible date
+    DateTime lastDate = DateTime.now(); // Latest possible date
+
+    DateTime? pickedStartDate = await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: firstDate,
+      lastDate: lastDate,
+    );
+
+    // If a valid start date is picked
+    if (pickedStartDate != null && pickedStartDate != startDate) {
+      setState(() {
+        startDate = pickedStartDate;
+
+        // Calculate the end date as 29 days before the start date
+        endDate = startDate!.subtract(Duration(days: 29));
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Start and End Date Picker'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Start Date Picker
+            Row(
+              children: [
+                ElevatedButton(
+                  onPressed: () => _selectStartDate(context),
+                  child: Text(
+                    startDate == null
+                        ? 'Select Start Date'
+                        : 'Start Date: ${startDate!.toLocal()}'.split(' ')[0],
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+
+            // Display End Date
+            if (endDate != null)
+              Text(
+                'End Date (29 days ago): ${endDate!.toLocal()}'.split(' ')[0],
+                style: TextStyle(fontSize: 16),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
