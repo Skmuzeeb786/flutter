@@ -1,0 +1,89 @@
+Question 20: Is there any way to rotate an image clock clockwise and anti-clockwise by clicking on a single button?
+
+Hint 1:- Use RotationTransition widget for rotation purposes.
+Hint 2:- Add a button for controlling image rotation. 
+Source code:
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Rotation Example',
+      home: RotationScreen(),
+    );
+  }
+}
+
+class RotationScreen extends StatefulWidget {
+  @override
+  _RotationScreenState createState() => _RotationScreenState();
+}
+
+class _RotationScreenState extends State<RotationScreen> with TickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _rotationAnimation;
+
+  bool isClockwise = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 1), // Duration of each rotation
+    );
+
+    _rotationAnimation = Tween<double>(begin: 0, end: 6.28) // 2 * pi radians for full rotation
+        .animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
+
+    _controller.repeat(reverse: true); // Repeat the animation in reverse to toggle the rotation direction
+  }
+
+  // Function to toggle rotation direction
+  void _toggleRotationDirection() {
+    setState(() {
+      if (isClockwise) {
+        _controller.reverse();
+      } else {
+        _controller.forward();
+      }
+      isClockwise = !isClockwise; // Toggle between clockwise and counterclockwise
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose(); // Dispose of the controller when the widget is destroyed
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Image Rotation Clockwise/Anti-Clockwise')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // RotationTransition widget to animate the image rotation
+            RotationTransition(
+              turns: _rotationAnimation,
+              child: Image.asset('assets/your_image.png', width: 100, height: 100), // Replace with your image asset
+            ),
+            SizedBox(height: 20),
+            // Button to toggle rotation direction
+            ElevatedButton(
+              onPressed: _toggleRotationDirection,
+              child: Text('Rotate Clockwise/Anti-Clockwise'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
