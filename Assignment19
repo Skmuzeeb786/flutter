@@ -1,0 +1,81 @@
+Question 24: You have two buttons A & B . When you click on the A button the image will be shown and you click on the B button then your name, phone number, and email will be shown. How will you achieve this problem statement?
+
+Hint 1:- Add the flag to show the different-2 data on click of buttons.
+
+Hint 2:- Add text in the column for showing the name, phone number, and email.
+
+Hint 3:- Add imageView to show the image.
+
+Hint 4:- Add the image to the assets folder.
+Code:
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: ToggleViewScreen(),
+    );
+  }
+}
+
+class ToggleViewScreen extends StatefulWidget {
+  @override
+  _ToggleViewScreenState createState() => _ToggleViewScreenState();
+}
+
+class _ToggleViewScreenState extends State<ToggleViewScreen> {
+  // Flag to switch between showing image and text
+  bool showImage = false;
+
+  // Method to toggle the flag
+  void toggleView(bool isImageView) {
+    setState(() {
+      showImage = isImageView;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Toggle View Example')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Show either the image or the text based on the flag
+            if (showImage) 
+              Image.asset('assets/lucky_image.png', width: 200, height: 200), // Image
+            if (!showImage) 
+              Column(
+                children: [
+                  Text('Name: John Doe', style: TextStyle(fontSize: 20)),
+                  Text('Phone: +1234567890', style: TextStyle(fontSize: 20)),
+                  Text('Email: johndoe@example.com', style: TextStyle(fontSize: 20)),
+                ],
+              ), // Personal info
+
+            SizedBox(height: 20),
+            
+            // Button A - Show Image
+            ElevatedButton(
+              onPressed: () => toggleView(true),
+              child: Text('Show Image'),
+            ),
+            SizedBox(height: 10),
+            
+            // Button B - Show Text Info
+            ElevatedButton(
+              onPressed: () => toggleView(false),
+              child: Text('Show Personal Info'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
