@@ -1,0 +1,135 @@
+Question 09: Build a Flutter application with two screens, "About" and "Home". Use a dedicated routing class and allow the background color of the Scaffold and AppBar in the About screen to be set from the Home screen.
+
+Code:
+import 'package:flutter/material.dart';
+
+// Main entry point of the app
+void main() {
+  runApp(MyApp());
+}
+
+// MyApp - The main app widget
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Navigation Example',
+      // Using the dedicated routing class to manage routes
+      onGenerateRoute: AppRouter.generateRoute,
+      initialRoute: AppRouter.homeRoute,  // Initial route
+    );
+  }
+}
+
+// AppRouter - The class to manage routes and pass arguments between screens
+class AppRouter {
+  static const String homeRoute = '/';
+  static const String aboutRoute = '/about';
+
+  static Route<dynamic> generateRoute(RouteSettings settings) {
+    // Check the name of the route and pass necessary arguments
+    switch (settings.name) {
+      case homeRoute:
+        return MaterialPageRoute(builder: (_) => HomeScreen());
+      case aboutRoute:
+        // Extract the color argument passed from the Home screen
+        final Color backgroundColor = settings.arguments as Color;
+        return MaterialPageRoute(builder: (_) => AboutScreen(backgroundColor: backgroundColor));
+      default:
+        return MaterialPageRoute(builder: (_) => HomeScreen());
+    }
+  }
+}
+
+// HomeScreen - The home screen widget
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  // The background color that will be passed to the About screen
+  Color selectedColor = Colors.blue;
+
+  // Method to navigate to the About screen and pass the selected color
+  void navigateToAboutScreen() {
+    Navigator.pushNamed(
+      context,
+      AppRouter.aboutRoute,
+      arguments: selectedColor,  // Pass the color to the About screen
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Home Screen'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Home Screen', style: TextStyle(fontSize: 24)),
+            SizedBox(height: 20),
+            // Button to navigate to the About screen
+            ElevatedButton(
+              onPressed: navigateToAboutScreen,
+              child: Text('Go to About Screen'),
+            ),
+            SizedBox(height: 20),
+            // Option to change the background color
+            DropdownButton<Color>(
+              value: selectedColor,
+              onChanged: (Color? newColor) {
+                setState(() {
+                  selectedColor = newColor!;
+                });
+              },
+              items: [
+                DropdownMenuItem(
+                  value: Colors.blue,
+                  child: Text('Blue'),
+                ),
+                DropdownMenuItem(
+                  value: Colors.green,
+                  child: Text('Green'),
+                ),
+                DropdownMenuItem(
+                  value: Colors.red,
+                  child: Text('Red'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// AboutScreen - The About screen widget
+class AboutScreen extends StatelessWidget {
+  final Color backgroundColor;
+
+  AboutScreen({required this.backgroundColor});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      // Set the background color based on the passed argument
+      backgroundColor: backgroundColor,
+      appBar: AppBar(
+        title: Text('About Screen'),
+        // Set the AppBar color based on the passed argument
+        backgroundColor: backgroundColor,
+      ),
+      body: Center(
+        child: Text(
+          'This is the About Screen',
+          style: TextStyle(fontSize: 24),
+        ),
+      ),
+    );
+  }
+}
