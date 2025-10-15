@@ -1,0 +1,97 @@
+Question 8: Create a Flutter app with two screens, each displaying a numerical value in its user interface. Upon pressing a floating action button on the home page, the value of the number will increase for both screens. Add navigation to switch between the two screens to observe the results. 
+
+Code:
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: HomeScreen(),
+    );
+  }
+}
+
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int number = 0;
+
+  // Method to increment the value
+  void incrementValue() {
+    setState(() {
+      number++;
+    });
+  }
+
+  // Method to navigate to the second screen
+  void navigateToSecondScreen() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SecondScreen(number: number, incrementValue: incrementValue),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Home Screen')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Number on Home Screen: $number', style: TextStyle(fontSize: 24)),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: navigateToSecondScreen,
+              child: Text('Go to Second Screen'),
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: incrementValue, // Increment the number
+        child: Icon(Icons.add),
+      ),
+    );
+  }
+}
+
+class SecondScreen extends StatelessWidget {
+  final int number;
+  final Function incrementValue;
+
+  SecondScreen({required this.number, required this.incrementValue});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Second Screen')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Number on Second Screen: $number', style: TextStyle(fontSize: 24)),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                incrementValue(); // Increase the value when button is pressed
+                Navigator.pop(context); // Return to the home screen
+              },
+              child: Text('Increase and Go Back'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
