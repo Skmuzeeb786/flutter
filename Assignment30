@@ -1,0 +1,59 @@
+Question 6: Create a simple TextFormField that displays a label and saves the user input to a variable.
+Source code:
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'TextFormField Example',
+      debugShowCheckedModeBanner: false,
+      home: TextInputExample(),
+    );
+  }
+}
+
+class TextInputExample extends StatefulWidget {
+  @override
+  _TextInputExampleState createState() => _TextInputExampleState();
+}
+
+class _TextInputExampleState extends State<TextInputExample> {
+  final TextEditingController _controller = TextEditingController();
+  String userInput = '';
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('TextFormField Example')),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          children: [
+            TextFormField(
+              controller: _controller,
+              decoration: InputDecoration(
+                labelText: 'Enter your name',
+                border: OutlineInputBorder(),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  userInput = value;
+                });
+              },
+            ),
+            SizedBox(height: 20),
+            Text(
+              'You typed: $userInput',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
