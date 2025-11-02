@@ -1,0 +1,81 @@
+Question 4: Show a gif in UI that is based on a timer. If the timer is equal and less than 15 seconds then show the gif else display a message like running time has been over. How will you solve this problem statement? 
+
+personing running.gif
+Hint 1:- Use futur.delayed for the duration
+
+Hint 2:- Use a flag based on time and add logic to rendering the gif and text.
+Source code:;
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'GIF Timer Example',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: RunningGifScreen(),
+    );
+  }
+}
+
+class RunningGifScreen extends StatefulWidget {
+  @override
+  _RunningGifScreenState createState() => _RunningGifScreenState();
+}
+
+class _RunningGifScreenState extends State<RunningGifScreen> {
+  bool showGif = true;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Hide GIF after 15 seconds
+    Future.delayed(Duration(seconds: 15), () {
+      setState(() {
+        showGif = false;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Running GIF Timer'),
+      ),
+      body: Center(
+        child: showGif
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Running...',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 20),
+                  Image.asset(
+                    'assets/running.gif', // your gif file here
+                    height: 200,
+                    width: 200,
+                  ),
+                ],
+              )
+            : Text(
+                'Running time has been over!',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red,
+                ),
+              ),
+      ),
+    );
+  }
+}
+
