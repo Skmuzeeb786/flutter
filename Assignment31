@@ -1,0 +1,69 @@
+Question 7: Create a Form with two TextFormFields that require user input and a button to submit the form. Use the Provider package to pass the form data to another widget.
+
+Source code:
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+void main() {
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => FormDataProvider(),
+      child: MyApp(),
+    ),
+  );
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Provider Form Example',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: FormScreen(),
+    );
+  }
+}
+
+// -------------------- PROVIDER CLASS --------------------
+class FormDataProvider extends ChangeNotifier {
+  String name = '';
+  String email = '';
+
+  void setData(String newName, String newEmail) {
+    name = newName;
+    email = newEmail;
+    notifyListeners();
+  }
+}
+
+// -------------------- FORM SCREEN --------------------
+class FormScreen extends StatefulWidget {
+  @override
+  _FormScreenState createState() => _FormScreenState();
+}
+
+class _FormScreenState extends State<FormScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("User Form")),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextFormField(
+                controller: _nameController,
+                decoration: InputDecoration(labelText: 'Enter your name'),
+                validator: (value) =>
+                    value!.isEmpty ? 'Name cannot be empty' : null,
+              ),
+              SizedBox(height: 20),
+              TextF
